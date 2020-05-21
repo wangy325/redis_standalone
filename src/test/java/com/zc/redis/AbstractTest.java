@@ -2,7 +2,7 @@ package com.zc.redis;
 
 import com.zc.redis.conf.StandAloneConfig;
 import com.zc.redis.ops.Ops4Hash;
-import com.zc.redis.ops.Ops4Value;
+import com.zc.redis.ops.Ops4String;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -14,7 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(classes = {StandAloneConfig.class})
 public abstract class AbstractTest {
     @Autowired
-    protected Ops4Value ops4Value;
+    protected Ops4String ops4String;
     @Autowired
     protected Ops4Hash ops4Hash;
     @Autowired

@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2019/12/5 / 15:02
  */
 @Service
-public class Ops4Value {
+public class Ops4String {
     private static final long EXPIRE_TIME = 24 * 3600;
 
     @Autowired

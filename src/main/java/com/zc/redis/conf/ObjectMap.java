@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
  * @date 2019/12/5 / 13:45
  */
 @Component
+@Deprecated
 public class ObjectMap extends ObjectMapper {
 
         private static final long serialVersionUID = 0L;

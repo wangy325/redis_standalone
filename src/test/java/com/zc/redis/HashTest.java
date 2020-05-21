@@ -38,8 +38,8 @@ public class HashTest extends AbstractTest {
 
     @Test
     public void testGet() {
-        System.out.println(ops4Hash.hget("mh", "hk1", MyObject.class));
-        System.out.println(ops4Hash.hget("mh", "hk3", String.class));
+        System.out.println(ops4Hash.hget("mh", "k1", MyObject.class));
+        System.out.println(ops4Hash.hget("mh", "k3", String.class));
     }
 
 

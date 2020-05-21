@@ -1,9 +1,14 @@
 package com.zc.redis.conf;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.zc.redis.RedisElement;
 import com.zc.redis.encrypt.AesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
@@ -24,21 +29,19 @@ import javax.annotation.PostConstruct;
 @Configuration
 @ComponentScan("com.zc.redis")
 @PropertySources({
-        @PropertySource(value = "classpath:redistandalone-dev.properties", ignoreResourceNotFound = true),
-        @PropertySource(value = "classpath:redistandalone-prod.properties", ignoreResourceNotFound = true)
+    @PropertySource(value = "classpath:redistandalone-dev.properties", ignoreResourceNotFound = true),
+    @PropertySource(value = "classpath:redistandalone-prod.properties", ignoreResourceNotFound = true)
 })
 public class StandAloneConfig {
 
     @Autowired
     private Environment env;
     @Autowired
-    private ObjectMap om;
-    @Autowired
     private RedisElement element;
 
     @SuppressWarnings("all")
     public RedisElement getKeyValuePair() throws Exception {
-        element.setHostName(AesUtil.decrypt(env.getProperty("redis.hostName")));
+        element.setHostName(env.getProperty("redis.hostName"));
         element.setPassword(AesUtil.decrypt(env.getProperty("redis.password")));
         element.setDatabase(env.getProperty("redis.database", int.class));
         element.setMaxIdle(env.getProperty("jedis.pool.maxIdle", int.class));
@@ -49,7 +52,7 @@ public class StandAloneConfig {
     }
 
     @PostConstruct
-    public void  initPlaceholder() throws Exception {
+    public void initPlaceholder() throws Exception {
         element = getKeyValuePair();
     }
 
@@ -73,19 +76,33 @@ public class StandAloneConfig {
     }
 
     @Bean
-    public JedisConnectionFactory jedisConnectionFactory() {
-        RedisStandaloneConfiguration rsc = redisStandaloneConfiguration();
+    public JedisConnectionFactory jedisConnectionFactory(RedisStandaloneConfiguration rsc,
+                                                         JedisPoolConfig jpc) {
         JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(rsc);
-        jedisConnectionFactory.setPoolConfig(jedisPoolConfig());
+        jedisConnectionFactory.setPoolConfig(jpc);
         return jedisConnectionFactory;
     }
 
+    /**
+     * 配置RedisTemplate以及序列化规则
+     *
+     * @param jcf JedisConnectionFactory
+     * @return
+     */
     @Bean
-    public RedisTemplate<String, Object> redisTemplate() {
+    public RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory jcf) {
         final RedisTemplate<String, Object> template = new RedisTemplate<>();
         StringRedisSerializer src = new StringRedisSerializer();
-        GenericJackson2JsonRedisSerializer jrs = new GenericJackson2JsonRedisSerializer(om);
-        template.setConnectionFactory(jedisConnectionFactory());
+        // 使用双括号语法
+        GenericJackson2JsonRedisSerializer jrs = new GenericJackson2JsonRedisSerializer(new ObjectMapper() {{
+            setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+            enableDefaultTyping(DefaultTyping.NON_FINAL);
+            // default true
+            configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, true);
+            configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
+        }});
+        template.setConnectionFactory(jcf);
         template.setStringSerializer(src);
         template.setKeySerializer(src);
         template.setHashKeySerializer(src);
