@@ -19,10 +19,9 @@
         <jedis.version>2.9.3</jedis.version>
         <jackson.version>2.9.8</jackson.version>
         <fastjson.version>1.2.39</fastjson.version>
-        <junit.platform.version>1.5.2</junit.platform.version>
     </properties>
 
-    <distributionManagement>
+    <!--<distributionManagement>
         <snapshotRepository>
             <id>nexus-snapshots</id>
             <name>Nexus Snapshots Repository</name>
@@ -33,20 +32,13 @@
             <name>Nexus Releases Repository</name>
             <url>http://47.110.226.247:8181/repository/maven-releases</url>
         </repository>
-    </distributionManagement>
+    </distributionManagement>-->
 
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-launcher</artifactId>
-            <version>${junit.platform.version}</version>
             <scope>test</scope>
         </dependency>
 
