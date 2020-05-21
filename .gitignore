@@ -1,0 +1,14 @@
+#### idea files
+.idea
+*.iml
+*.iws
+*.ipr
+
+#### mac file
+.DS_Store
+
+#### svn
+.svn/
+
+#### target 
+target/
