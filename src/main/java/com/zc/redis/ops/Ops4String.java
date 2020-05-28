@@ -5,6 +5,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.exceptions.JedisConnectionException;
 
 import java.util.concurrent.TimeUnit;
 
@@ -17,6 +18,8 @@ import java.util.concurrent.TimeUnit;
 public class Ops4String {
     private static final long EXPIRE_TIME = 24 * 3600;
 
+    // TODO: 是否需要处理异常特殊情况的异常？
+
     @Autowired
     private RedisTemplate<String, Object> template;
 
@@ -27,7 +30,7 @@ public class Ops4String {
      * @param value Object not null
      * @see ValueOperations
      */
-    public <T> void set(String key, T value) {
+    public <T> void set(@NonNull String key, @NonNull T value) {
         set(key, value, EXPIRE_TIME);
     }
 
@@ -38,7 +41,7 @@ public class Ops4String {
      * @param value  Object not null
      * @param expire expired in {@code expire} seconds
      */
-    public <T> void set(String key, T value, long expire) {
+    public <T> void set(@NonNull String key, @NonNull T value, long expire) {
         template.opsForValue().set(key, value, expire, TimeUnit.SECONDS);
     }
 
@@ -48,7 +51,7 @@ public class Ops4String {
      * @param key string key not null
      * @return null when key is not exist
      */
-    public String get(String key) {
+    public String get(@NonNull String key) throws JedisConnectionException {
         return ((String) template.opsForValue().get(key));
     }
 
@@ -61,7 +64,7 @@ public class Ops4String {
      * @param key string key not null
      * @return Object or null if key does not exist
      */
-    public Object getObject(String key) {
+    public Object getObject(@NonNull String key) {
         return (template.opsForValue().get(key));
     }
 
@@ -73,7 +76,7 @@ public class Ops4String {
      * @param clazz the class type of particular Object
      * @return Object or null if key does not exist
      */
-    public <T> T get(String key, Class<T> clazz) {
+    public <T> T get(@NonNull String key, Class<T> clazz) {
         if (hasKey(key)) {
             Object o = template.opsForValue().get(key);
             return (null == o ? null : clazz.cast(o));
@@ -87,7 +90,7 @@ public class Ops4String {
      * @param key String key not null
      * @return long  value after increment, or null if in pipeline or transaction
      */
-    public Long increment(String key) {
+    public Long increment(@NonNull String key) {
         return template.opsForValue().increment(key);
     }
 
@@ -97,7 +100,7 @@ public class Ops4String {
      * @param key String key not null
      * @return value after decrement, or null if in pipeline or transaction
      */
-    public Long decrement(String key) {
+    public Long decrement(@NonNull String key) {
         return template.opsForValue().decrement(key);
     }
 

@@ -2,11 +2,12 @@ package com.zc.redis;
 
 import com.zc.redis.bean.MyObject;
 import com.zc.redis.ops.Ops4String;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author wangy
@@ -14,14 +15,20 @@ import static org.junit.Assert.assertEquals;
  * @date 2019/12/5 / 15:12
  */
 @RunWith(SpringJUnit4ClassRunner.class)
+@Slf4j
 public class StringTest extends AbstractTest {
 
     @Test
     public void testIncr() {
-//        System.out.println(standaloneTemplate.ops4String().get("hello"));
         Ops4String ops4String = standaloneTemplate.ops4String();
-//        ops4String.set("hello", "docker");
-        assertEquals("docker", ops4String.get("hello"));
+        ops4String.set("hello", "docker");
+        String v = null;
+        try {
+            v = ops4String.get("hello");
+        } catch (Exception e) {
+            log.error("error", e);
+        }
+        assertEquals("docke", v);
     }
 
     @Test
