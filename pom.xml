@@ -17,7 +17,7 @@
         <junit.version>4.12</junit.version>
         <spring.redis.version>2.1.9.RELEASE</spring.redis.version>
         <jedis.version>2.9.3</jedis.version>
-        <jackson.version>2.9.8</jackson.version>
+        <jackson.version>2.11.0</jackson.version>
         <fastjson.version>1.2.39</fastjson.version>
     </properties>
 
