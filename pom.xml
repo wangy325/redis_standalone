@@ -14,7 +14,7 @@
         <project.buildDate>${maven.build.timestamp}</project.buildDate>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>5.1.8.RELEASE</spring.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <spring.redis.version>2.1.9.RELEASE</spring.redis.version>
         <jedis.version>2.9.3</jedis.version>
         <jackson.version>2.11.0</jackson.version>
